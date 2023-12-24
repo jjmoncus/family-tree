@@ -8,5 +8,5 @@ This project allows us to crowdsource oral histories within the family and build
 The back-end will built in Python.
 
 ## Front-end
-The front-end UI will be built in Javascript.
+The front-end UI will be built in React.
 

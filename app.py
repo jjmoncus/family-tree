@@ -3,7 +3,6 @@ from flask import Flask, jsonify, request
 
 # defines the app as a Flask app object
 # `__name__` is important - a special Python variable containing the name of the current module
-print(__name__)
 app = Flask(__name__)
 
 # In-memory data structure to store people
@@ -28,5 +27,10 @@ def manage_people():
         people.append(new_person)
         return jsonify({'message': 'Person added successfully'})
 
+
+# literally executes the app
 if __name__ == '__main__':
     app.run(debug=True)
+
+# You run the app by running this entire file
+# using `python app.py`

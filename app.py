@@ -1,36 +1,65 @@
-# import dependencies
-from flask import Flask, jsonify, request
+from flask import Flask, render_template, url_for, request, redirect
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-# defines the app as a Flask app object
-# `__name__` is important - a special Python variable containing the name of the current module
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
 
-# In-memory data structure to store people
-people = [{"id": 1, "first_name": "Ivette", "last_name": "Moncus", "parent_id": None},
-{"id": 2, "first_name": "J.J.", "last_name": "Moncus", "parent_id": 1},
-# Add more people as needed
-]
+class ToDo(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    content = db.Column(db.String(200), nullable = False)
+    date_created = db.Column(db.DateTime, default = datetime.utcnow)
 
-# Helper function to find a person by ID
-def find_person_by_id(person_id):
-    return next((person for person in people if person["id"] == person_id), None)
-
-@app.route('/api/people', methods=['GET', 'POST'])
-def manage_people():
-    if request.method == 'GET':
-        return jsonify(people)
-
-    elif request.method == 'POST':
-        data = request.get_json()
-        new_person_id = len(people) + 1
-        new_person = {"id": new_person_id, "first_name": data['first_name'], "last_name": data['last_name'],"parent_id": data.get('parent_id')}
-        people.append(new_person)
-        return jsonify({'message': 'Person added successfully'})
+    def __repr__(self):
+        return '<Task %r>' % self.id
 
 
-# literally executes the app
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/', methods=['POST', 'GET'])
+def index():
+    if request.method == 'POST':
+        task_content = request.form['content']
+        new_task = ToDo(content=task_content)
 
-# You run the app by running this entire file
-# using `python app.py`
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return 'There was an issue adding your task'
+        
+    else:
+        tasks = ToDo.query.order_by(ToDo.date_created).all()
+        return render_template('index.html', tasks=tasks)
+
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    task_to_delete = ToDo.query.get_or_404(id)
+
+    try:
+        db.session.delete(task_to_delete)
+        db.session.commit()
+        return redirect('/')
+    except:
+        return 'There was a problem deleting that task'
+
+
+@app.route('/update/<int:id>', methods=['POST', 'GET'])
+def update(id):
+    task = ToDo.query.get_or_404(id)
+
+    if request.method == 'POST':
+        task.content = request.form['content']
+
+        try:
+            db.session.commit()
+            return redirect('/')
+        except:
+            return 'There was an issue updating your task'
+    else:
+        return render_template('update.html', task=task)
+
+
+if __name__ == "__main__":
+    app.run(port = 8000, debug = True)

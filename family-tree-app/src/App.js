@@ -13,6 +13,7 @@ function App() {
     setNewPerson({ ...newPerson, [name]: value });
   };
 
+  // this is apparently working as appropriate
   const handleFormSubmit = (e) => {
     e.preventDefault();
     axios.post('/api/people', newPerson)
@@ -20,17 +21,33 @@ function App() {
         console.log(response.data.message);
         // Optionally, you can refresh the list of people after adding a new one
         axios.get('/api/people')
-          .then(response => setPeople(response.data))
+          .then(response => {
+            setPeople(response.data)
+            console.log('New people data:', response.data);
+          })
           .catch(error => console.error('Error fetching data:', error));
       })
       .catch(error => console.error('Error adding person:', error));
+
+      console.log('Form submitted!')
   };
 
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
+    setLoading(true); // Set loading state to true before the request
+
     axios.get('/api/people')
-      .then(response => setPeople(response.data))
-      .catch(error => console.error('Error fetching data:', error));
+      .then(response => {
+        setPeople(response.data);
+        setLoading(false); // Set loading state to false after successful request
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setLoading(false); // Set loading state to false after error
+      });
   }, []);
+
 
   return (
     <div className="App">
@@ -49,7 +66,7 @@ function App() {
       <div className="card-container">
         {people.map(person => (
           <div key={person.id} className="card">
-            <p>{person.name}</p>
+            <p>{person.first_name} {person.last_name}</p>
             <p>Parent ID: {person.parent_id}</p>
           </div>
         ))}

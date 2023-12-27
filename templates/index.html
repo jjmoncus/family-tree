@@ -1,45 +1,108 @@
 {% extends 'base.html' %}
 
 {% block head %} 
-<title>Task Master</title>
+<title>Main Webpage</title>
 {% endblock %}
 
 {% block body %} 
 
 <div class='content'>
-    <h1 style="text-align: center">Task Master</h1>
+    <h1 style="text-align: center">Family</h1>
 
-    {% if tasks|length < 1 %}
+    {% if people|length < 1 %}
     
-    <h4 style="text-align: center">There are no tasks. Create one below!</h4>
+    <h4 style="text-align: center">There are no people. Create one below!</h4>
     
     {% else %}
 
     <table>
         <tr>
-            <th>Task</th>
-            <th>Added</th>
+            <th>ID #</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Nick Name</th>
+            <th>Parent ID</th>
+            <th>Date added</th>
             <th>Actions</th>
         </tr>
-        {% for task in tasks %}
+        {% for person in people %}
 
             <tr>
-                <td>{{ task.content }}</td>
-                <td>{{ task.date_created.date() }}</td>
+                <td>{{ person.id }}</td>
+                <td>{{ person.first_name }}</td>
+                <td>{{ person.middle_name }}</td>
+                <td>{{ person.last_name }}</td>
+                <td>{{ person.nick_name }}</td>
+                <td>{{ person.parent_id }}</td>
+                <td>{{ person.date_created.date() }}</td>
                 <td>
-                    <a href="/delete/{{task.id}}">Delete</a>
+                    <a href="/delete/{{person.id}}">Delete</a>
                     <br>
-                    <a href="/update/{{task.id}}">Update</a>
+                    <a href="/update/{{person.id}}">Update</a>
                 </td>
             </tr>
-
-         {% endfor %} 
+        {% endfor %} 
     </table>
-    {% endif %} 
+    
+    {% for person in people %}
+    
+    <div class="card-container">
+        <div class="card">
+            <div class="card-content">
+                
+                {% if person.nick_name == "" %} 
+                <h3>{{person.first_name}} {{person.last_name}}</h3>
+                {% else %} 
+                <h3>{{person.nick_name}} {{person.last_name}}</h3>
+                {% endif %}
+
+                <p>{{person.first_name}} {{person.middle_name}} {{person.last_name}} ({{ person.id }})</p>
+                <p>Child of {{person.parent_id}}</p>
+                <div class="btn-container">
+                    <a href="/delete/{{person.id}}" class="btn">Delete</a>
+                    <a href="/update/{{person.id}}" class="btn">Update</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% endfor %} 
+
+    {% endif %}
+
     <div class = 'form'>
-        <form a="/" method="POST">
-            <input type="text", name="content", id="content">
-            <input type="submit", value="Add Task">
+        <form action="/" method="POST">
+            
+            <div>
+                <label>First Name</label>
+                <input type="text", name='first_name', id='first_name'>    
+            </div>
+
+            <div>
+                <label>Middle Name</label>
+                <input type="text", name='middle_name', id='middle_name'>
+            </div>
+            
+
+            <div>
+                <label>Last Name</label>
+                <input type="text", name='last_name', id='last_name'>
+            </div>
+            
+            <div>
+                <label>Nick Name</label>
+                <input type="text", name='nick_name', id='nick_name'>
+            </div>
+
+            <div>
+                <label>Parent ID</label>
+                <input type="number", name='parent_id', id='parent_id'>
+            </div>
+            
+            <div>
+                <input type="submit", value="Add person">
+            </div>
     
         </form>
     </div>

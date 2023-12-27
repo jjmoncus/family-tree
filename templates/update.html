@@ -1,18 +1,45 @@
 {% extends 'base.html' %}
 
 {% block head %} 
-<title>Task Master</title>
+<title>Update Webpage</title>
 {% endblock %}
 
 {% block body %} 
 
 <div class='content'>
-    <h1 style="text-align: center">Update Task</h1>
+    <h1 style="text-align: center">Update person</h1>
 
     <div class = 'form'>
-        <form action="/update/{{task.id}}" method="POST">
-            <input type="text", name="content", id="content", value="{{task.content}}">
-            <input type="submit", value="Update">
+        <form action="/update/{{person.id}}" method="POST">
+            
+            <div>
+                <label>First Name</label>
+                <input type="text" name='first_name' id='first_name' value="{{person.first_name}}">
+            </div>
+            
+            <div>
+                <label>Middle Name</label>
+                <input type="text" name='middle_name' id='middle_name' value="{{person.middle_name}}">
+            </div>
+
+            <div>
+                <label>Last Name</label>
+                <input type="text" name='last_name' id='last_name' value="{{person.last_name}}">
+            </div>
+
+            <div>
+                <label>Nick Name</label>
+                <input type="text" name='nick_name' id='nick_name' value="{{person.nick_name}}">
+            </div>
+
+            <div>
+                <label>Parent ID</label>
+                <input type="number" name='parent_id' id='parent_id' value="{{person.parent_id}}">
+            </div>
+
+            <div>
+                <input type="submit" value="Update person">
+            </div>
     
         </form>
     </div>

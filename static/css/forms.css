@@ -1,0 +1,44 @@
+
+
+/* dynamic form */
+#formContainer {
+    width: 66%;
+    height: 66%;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--main-item-color);
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    background: var(--main-bg-filter-color);  
+    backdrop-filter: blur(16px);   
+}
+
+#formContainer div.form {
+    /* these are so all children stay vertically and horizontally center */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    /* ------------------------------ */
+}
+
+#formContainer div.form #personForm {
+    width: 300px;
+    height: auto;
+
+    /* these are also so all child form elements are collectively centered within form  */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+    /* ------------------------------ */
+}
+
+#formContainer div.form #personForm div {
+    margin: 10px;
+}

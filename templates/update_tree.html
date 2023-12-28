@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %} 
-<title>Update Webpage</title>
+
 {% endblock %}
 
 {% block body %} 
@@ -10,7 +10,7 @@
     <h1 style="text-align: center">Update person</h1>
 
     <div class = 'form'>
-        <form action="/update/{{person.id}}" method="POST">
+        <form action="/update_tree/{{person.id}}" method="POST">
             
             <div>
                 <label>First Name</label>

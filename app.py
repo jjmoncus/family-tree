@@ -23,6 +23,8 @@ class Person(db.Model):
         return '<Person %r>' % self.id
 
 
+
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
@@ -68,8 +70,34 @@ def delete(id):
         return 'There was a problem deleting that person'
 
 
-@app.route('/update/<int:id>', methods=['POST', 'GET'])
-def update(id):
+@app.route('/update_table/<int:id>', methods=['POST', 'GET'])
+def update_table(id):
+    person = Person.query.get_or_404(id)
+
+    if request.method == 'POST':
+        # set class instance's attributes to those from form
+        person.first_name = request.form['first_name']
+        person.last_name = request.form['last_name']
+        person.middle_name = request.form['middle_name']
+        person.nick_name = request.form['nick_name']
+        person.parent_id = request.form['parent_id']
+
+
+        try:
+            db.session.commit()
+            return redirect('/table')
+        except:
+            return 'There was an issue updating your person'
+    # This is the 'GET' case
+    else:
+        # just render the update_table page, i.e. a page just showing the info
+        # for `person` to be updated
+        return render_template('update_table.html', person=person)
+    
+
+
+@app.route('/update_tree/<int:id>', methods=['POST', 'GET'])
+def update_tree(id):
     person = Person.query.get_or_404(id)
 
     if request.method == 'POST':
@@ -88,9 +116,41 @@ def update(id):
             return 'There was an issue updating your person'
     # This is the 'GET' case
     else:
-        # just render the update page, i.e. a page just showing the info
+        # just render the update_tree page, i.e. a page just showing the info
         # for `person` to be updated
-        return render_template('update.html', person=person)
+        return render_template('update_tree.html', person=person)
+
+@app.route('/table', methods=['POST', 'GET'])
+def table():
+    if request.method == 'POST':
+        
+        # get data from form
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        middle_name = request.form['middle_name']
+        nick_name = request.form['nick_name']
+        parent_id = request.form['parent_id']
+
+        # pass form data to new class instance
+        new_person = Person(first_name = first_name,
+                            last_name = last_name,
+                            middle_name = middle_name,
+                            nick_name = nick_name,
+                            parent_id = parent_id)
+
+        try:
+            db.session.add(new_person)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return 'There was an issue adding your person'
+        
+    # this is thus the 'GET' case
+    else:
+        # sort the table by date created
+        people = Person.query.order_by(Person.date_created).all()
+        # render the main webpage, passing the ordered table as an object to be used in loops
+        return render_template('table.html', people=people)
 
 # under what circumstances would this ever change? idk
 if __name__ == "__main__":

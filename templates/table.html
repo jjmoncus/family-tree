@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+{% endblock %}
+
+{% block body %} 
+
+<!-- main page -->
+<div class='content' id="main-content">
+
+    <!-- dynamic form -->
+    <button class="btn" id='addPersonBtn'>Add Person</button>
+    <div id="formContainer"></div>
+
+    <!-- See as tree -->
+    <a class="btn" id='to_tree' href="/">See as Tree</a>
+    
+    <!-- main page -->
+    <h1 style="text-align: center">Family</h1>
+
+    {% if people|length < 1 %}
+    
+        <h4 style="text-align: center">There are no people. Create one below!</h4>
+    
+    {% else %}
+
+        <table id="people-table">
+            <tr>
+                <th>ID #</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Nick Name</th>
+                <th>Parent ID</th>
+                <th>Date added</th>
+                <th>Actions</th>
+            </tr>
+            {% for person in people %}
+
+                <tr>
+                    <td>{{ person.id }}</td>
+                    <td>{{ person.first_name }}</td>
+                    <td>{{ person.middle_name }}</td>
+                    <td>{{ person.last_name }}</td>
+                    <td>{{ person.nick_name }}</td>
+                    <td>{{ person.parent_id }}</td>
+                    <td>{{ person.date_created.date() }}</td>
+                    <td>
+                        <a href="/delete/{{person.id}}">Delete</a>
+                        <br>
+                        <a href="/update_table/{{person.id}}">Update</a>
+                    </td>
+                </tr>
+            {% endfor %} 
+        </table>
+
+    {% endif %}
+</div>
+
+{% endblock %}

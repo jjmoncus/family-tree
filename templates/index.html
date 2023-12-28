@@ -6,7 +6,6 @@
 
 {% block body %} 
 
-
 <!-- commenting out splash for now, it's annoying
 <div class="splash" id="splash">
     <div class="splash-content-container">
@@ -19,53 +18,100 @@
 </div>
 -->
 
-
 <!-- main page -->
-<div class='content' id="main-content">
+<div class='content grid-container' id="content-index">
 
-    <!-- dynamic form -->
-    <button class="btn" id='addPersonBtn'>Add Person</button>
-    <div id="formContainer"></div>
-
-    <!-- See as table -->
-    <a class="btn" id='table' href="/table">See as Table</a>
-    
-    <!-- main page -->
-    <h1 style="text-align: center">Family</h1>
-
-    {% if people|length < 1 %}
-    
-        <h4 style="text-align: center">There are no people. Create one below!</h4>
-    
-    {% else %}
-        
-        {% for person in people %}
-        
-        <div class="card-container">
-            <div class="card">
-                <div class="card-content">
-                    
-                    <img src="{{ url_for('static', filename='logos/empty-prof-pic.png') }}" alt="Profile Picture">
-                    {% if person.nick_name == "" %} 
-                    <h3>{{person.first_name}} {{person.last_name}}</h3>
-                    {% else %} 
-                    <h3>{{person.nick_name}} {{person.last_name}}</h3>
-                    {% endif %}
-
-                    <p>{{person.first_name}} {{person.middle_name}} {{person.last_name}} ({{ person.id }})</p>
-                    <p>Child of {{person.parent_id}}</p>
-                    <div class="btn-container">
-                        <a href="/delete/{{person.id}}" class="btn">Delete</a>
-                        <a href="/update_tree/{{person.id}}" class="btn">Update</a>
-                    </div>
-                </div>
+    <!-- grid item 1: logo and app name-->
+    <div class="grid-item grid-item-1">
+        <div class="logo" id="logo-index">
+            <div class="content-container-column">
+                    <img src="{{ url_for('static', filename='logos/green-tree-logo.png') }}" alt="Green Tree Logo">
+                    <h1>Roots</h1>
             </div>
         </div>
-        
-        {% endfor %} 
+    </div>
 
-    {% endif %}
+    <!-- grid item 2: Name of Current family-->
+    <div class="grid-item grid-item-2">
+        <div class="current-family-name" id="current-family-name-index">
+            <div class="content-container-row">
+                <h1>Moncus Family</h1>
+            </div>
+        </div>
+    </div>
 
+    <!-- grid item 3: Account Tasks Panel -->
+    <div class="grid-item grid-item-3">
+        <div class="account-tasks-panel">
+            <div class="content-container-row">
+                <a class="btn" id='log-in' href="">Log In</a>
+                <a class="btn" id='sign-up' href="">Sign-up</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- grid item 4: App Tasks Panel-->
+    <div class="grid-item grid-item-4">
+        <div class="app-tasks-panel">
+            <div class="content-container-column">
+                <!-- dynamic form -->
+                <a class="btn" id='addPersonBtn'>Add Person</a>
+                <div id="formContainer"></div>
+
+                <!-- See as table -->
+                <a class="btn" id='table' href="/table">See as Table</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- grid item 5: Main Tree View -->
+    <div class="grid-item grid-item-5">
+        <div class="tree-panel">
+            <div class="content-tree">
+                {% if people|length < 1 %}
+    
+                <h4 style="text-align: center">There are no people. Create one!</h4>
+            
+                {% else %}
+                    
+                    {% for person in people %}
+                    
+                    <div class="card-container">
+                        <div class="card">
+                            <a class="card-link" href="/card_focus/{{person.id}}">
+                                <div class="card-content">
+                                
+                                    <img src="{{ url_for('static', filename='logos/empty-prof-pic.png') }}" alt="Profile Picture">
+                                    {% if person.nick_name == "" %} 
+                                    <h3>{{person.first_name}} {{person.last_name}}</h3>
+                                    {% else %} 
+                                    <h3>{{person.nick_name}} {{person.last_name}}</h3>
+                                    {% endif %}
+                                    <div class="btn-container">
+                                        <a href="/delete/{{person.id}}" class="btn">Delete</a>
+                                        <a href="/update_tree/{{person.id}}" class="btn">Update</a>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    {% endfor %} 
+            
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- grid item 6: Secondary App Info --> 
+    <div class="grid-item grid-item-6">
+        <div class="secondary-panel">
+            <div class="content-container-column">
+                <h1>None yet</h1>
+            </div>
+        </div>   
+    </div>
+    
 </div>
 
 {% endblock %}

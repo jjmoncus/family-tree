@@ -8,6 +8,7 @@
 }
 .btn {
     display: inline-block;
+    font-size: 10px;
     padding: 8px;
     background-color: var(--main-btn-color);
     text-decoration: none;

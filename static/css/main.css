@@ -1,11 +1,13 @@
 /* properties across all items */
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
 :root {
     --main-black: #0a0a0a;
     --main-white: #fff;
     
     --main-bg-color: #e5e5e5;
-    --main-bg-filter-color: rgba(255, 255, 255, 0.2)
+    --main-bg-filter-color: rgba(1, 1, 1, 0.1)
 
     --main-item-color: #f2f2f2;
     --main-item-color-hover: #f5f5f5;
@@ -19,14 +21,29 @@ body {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    font-family: sans-serif;
+    font-family: Nunito, sans-serif;
     background-color: var(--main-bg-color);
+    
+}
+
+
+.content-container-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.content-container-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
 }
 
 #content {
     width: 70%;
 }
-
 
 /* for background blurring */
 #main-content-blur {

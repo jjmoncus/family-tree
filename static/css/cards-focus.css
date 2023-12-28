@@ -1,15 +1,22 @@
 /* for cards */
 
-.card-container {
-    width: 33%;
-    max-width: 300px;
-    display: inline-flex;
+.card-focus-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-focus-container {
+    width: 75%;
+    max-width: 800px;
+    display: flex;
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 20px;
 }
 
-.card {
+
+.card-focus {
     width: 100%;
     background-color: var(--main-item-color);
     border-radius: 8px;
@@ -19,17 +26,14 @@
     margin: 20px;
 }
 
-.card:hover {
+/*
+.card-focus:hover {
     background-color: var(--main-item-color-hover);
-}
-/* does nothing for now
-.card img {
-    width: 100%;
-    height: auto;
 }
 */
 
-.card-content {
+
+.card-focus-content {
     padding: 4px;
     display: flex;
     flex-direction: column;
@@ -37,17 +41,25 @@
     justify-content: center;
 }
 
-.card-content img {
+.card-focus-content img {
     width: 60%;
     height: auto;
 }
-.card-content h3 {
+/*
+.card-focus-content h3 {
     font-size: 28px;
     margin-bottom: 4px;
     color: var(--main-black)
 }
-.card-content p {
+*/
+
+#info-table {
     color: var(--main-secondary-text-color);
     font-size: 15px;
     line-height: 1.3;
+   
+}
+
+#info-table td {
+    border: none;    
 }

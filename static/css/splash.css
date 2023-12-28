@@ -42,5 +42,17 @@
 
 .fade-in {
     opacity: 0;
-    animation: fadeIn 0.5s ease-in forwards;
+    animation: fadeIn .75s ease-in forwards;
+}
+
+
+@keyframes fadeOut {
+    to{
+        opacity: 0;
+    }
+}
+
+.fade-out {
+    opacity: 1;
+    animation: fadeOut .75s ease-in forwards;
 }

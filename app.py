@@ -152,6 +152,23 @@ def table():
         # render the main webpage, passing the ordered table as an object to be used in loops
         return render_template('table.html', people=people)
 
+
+@app.route('/card_focus/<int:id>', methods=['POST', 'GET'])
+def card_focus(id):
+    person = Person.query.get_or_404(id)
+
+    if request.method == 'POST':
+        # maybe do some stuff later
+        return redirect('/')
+    
+    # 'GET'
+    else:
+        # just render the card_focus page, i.e. a page just showing the info
+        # for `person`
+        return render_template('card_focus.html', person=person)
+
+
+
 # under what circumstances would this ever change? idk
 if __name__ == "__main__":
     # runs app

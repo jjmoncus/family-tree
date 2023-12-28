@@ -4,11 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addPersonBtn.addEventListener("click", function () {
         displayForm();
-        
     });
 
     function displayForm() {
-        
         // form inputs
         const formHTML = `
 
@@ -46,7 +44,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
         formContainer.innerHTML = formHTML;
         formContainer.style.display = "block";
-    }
-
-    
+    }  
 })

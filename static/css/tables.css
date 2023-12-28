@@ -8,10 +8,11 @@ tr {
     height: 50px;
     background-color:var(--main-item-color);
 }
+/*
 tr:hover {
     background-color:var(--main-item-color-hover);
 }
-
+*/
 td, th {
     text-align: center;
     border: solid 1px var(--main-black);
@@ -22,6 +23,8 @@ th {
     background-color: var(--main-item-color);
 }
 
+/*
 th:hover {
     background-color: var(--main-item-color-hover);
 }
+*/

@@ -18,6 +18,10 @@
 </div>
 -->
 
+
+<!--read by Gregor Cresnar from <a href="https://thenounproject.com/browse/icons/term/read/" target="_blank" title="read Icons">Noun Project</a> (CC BY 3.0)-->
+<!--Delete by hans draiman from <a href="https://thenounproject.com/browse/icons/term/delete/" target="_blank" title="Delete Icons">Noun Project</a> (CC BY 3.0)-->
+<!--edit by hans draiman from <a href="https://thenounproject.com/browse/icons/term/edit/" target="_blank" title="edit Icons">Noun Project</a> (CC BY 3.0)-->
 <!-- main page -->
 <div class='content default-grid' id="content-index">
 
@@ -54,6 +58,9 @@
     <div class="grid-item grid-item-4">
         <div class="app-tasks-panel">
             <div class="content-container-column">
+                <!-- Home -->
+                <a class="btn" id='Home' href = "/">Home</a>
+                
                 <!-- dynamic add-Person form -->
                 <a class="btn" id='addPersonBtn'>Add Person</a>
                 <div id="formContainer"></div>
@@ -81,7 +88,7 @@
                     
                     <div class="card-container">
                         <div class="card">
-                            <a class="card-link" href="/card_focus/{{person.id}}">
+                            <a class="card-link" href="/focus/{{person.id}}">
                                 <div class="card-content">
                                 
                                     <img src="{{ url_for('static', filename='logos/empty-prof-pic.png') }}" alt="Profile Picture">
@@ -91,8 +98,18 @@
                                     <h3>{{person.nick_name}} {{person.last_name}}</h3>
                                     {% endif %}
                                     <div class="btn-container">
-                                        <a href="/delete/{{person.id}}" class="btn">Delete</a>
-                                        <a href="/update_tree/{{person.id}}" class="btn">Update</a>
+                                        <a href="/delete/{{person.id}}" class="btn">
+                                            X
+                                            <!--<img src="{{ url_for('static', filename='logos/x.png') }}" alt="Delete">-->
+                                        </a>
+                                        <a href="/update_tree/{{person.id}}" class="btn">
+                                            E
+                                            <!--<img src="{{ url_for('static', filename='logos/edit.png') }}" alt="Edit">-->
+                                        </a>
+                                        <a href="/big_card/{{person.id}}" class="btn">
+                                            R
+                                            <!--<img src="{{ url_for('static', filename='logos/read.png') }}" alt="Read">-->
+                                        </a>
                                     </div>
                                 </div>
                             </a>

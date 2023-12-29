@@ -21,3 +21,7 @@
 .btn:hover {
     background-color: var(--main-light-green);
 }
+
+.btn img {
+    object-fit: contain;
+}

@@ -36,7 +36,7 @@ class Person(db.Model):
                               secondary = person_parent_association,
                               primaryjoin = id == person_parent_association.c.person_id,
                               secondaryjoin = id == person_parent_association.c.parent_id,
-                              backref = db.backref('children', lazy='dynamic'))
+                              backref = db.backref('children', lazy='select'))
     
     # Define the many-to-many relationship between siblings
     siblings = db.relationship('Person', 
@@ -44,7 +44,7 @@ class Person(db.Model):
                               primaryjoin = id == sibling_association.c.left_id,
                               secondaryjoin = id == sibling_association.c.right_id,
                               back_populates = 'siblings', 
-                              lazy='dynamic')
+                              lazy='select')
 
     def __repr__(self):
         return '<Person %r>' % self.id
@@ -173,8 +173,8 @@ def table():
         return render_template('table.html', people=people)
 
 
-@app.route('/card_focus/<int:id>', methods=['POST', 'GET'])
-def card_focus(id):
+@app.route('/big_card/<int:id>', methods=['POST', 'GET'])
+def big_card(id):
     person = Person.query.get_or_404(id)
 
     if request.method == 'POST':
@@ -183,9 +183,9 @@ def card_focus(id):
     
     # GET
     else:
-        # just render the card_focus page, i.e. a page just showing the info
+        # just render the big_card page, i.e. a page just showing the info
         # for `person`
-        return render_template('card_focus.html', person=person)
+        return render_template('big_card.html', person=person)
 
 
 @app.route('/relationships', methods=['GET'])
@@ -280,6 +280,25 @@ def cancel():
     # 'GET'
     # render where you just were
     return redirect(request.referrer)
+
+
+@app.route('/focus/<int:id>', methods=['GET'])
+def focus(id):
+    
+    person = Person.query.get_or_404(id)
+
+    parents = person.parents
+    siblings = person.siblings
+    children = person.children
+
+    all_siblings = siblings + [person]
+
+    parents_table = Person.query.filter(Person.id.in_([parent.id for parent in parents])).distinct().all()
+    siblings_table = Person.query.filter(Person.id.in_([sibling.id for sibling in all_siblings])).distinct().all()
+    children_table = Person.query.filter(Person.id.in_([child.id for child in children])).distinct().all()
+
+
+    return render_template('focus.html', person=person, parents=parents_table, siblings=siblings_table, children=children_table)
 
 # under what circumstances would this ever change? idk
 if __name__ == "__main__":

@@ -145,6 +145,7 @@
                     <th>Person</th>
                     <th>Parents</th>
                     <th>Siblings</th>
+                    <th>Children</th>
                 </tr>
                 {% for person in people %}
                     <tr>
@@ -156,6 +157,11 @@
                         </td>
                         <td>
                             {% for person in person.siblings %}
+                            {{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}, 
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for person in person.children %}
                             {{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}, 
                             {% endfor %}
                         </td>

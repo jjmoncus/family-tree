@@ -20,10 +20,10 @@ td, th {
 }
 
 
-.bordered th, td {
+.bordered tr {
     border: solid 1px var(--main-dark-brown);  
 }
 
-.borderless th, td {
+.borderless th, td, tr {
     border: none;    
 }

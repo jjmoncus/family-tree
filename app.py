@@ -17,6 +17,12 @@ person_parent_association = db.Table(
     db.Column('parent_id', db.Integer, db.ForeignKey('person.id'))
 )
 
+sibling_association = db.Table(
+    'sibling_association',
+    db.Column('left_id', db.Integer, db.ForeignKey('person.id')),
+    db.Column('right_id', db.Integer, db.ForeignKey('person.id'))
+)
+
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(200), nullable=False)
@@ -31,13 +37,17 @@ class Person(db.Model):
                               primaryjoin = id == person_parent_association.c.person_id,
                               secondaryjoin = id == person_parent_association.c.parent_id,
                               backref = db.backref('children', lazy='dynamic'))
+    
+    # Define the many-to-many relationship between siblings
+    siblings = db.relationship('Person', 
+                              secondary = sibling_association,
+                              primaryjoin = id == sibling_association.c.left_id,
+                              secondaryjoin = id == sibling_association.c.right_id,
+                              back_populates = 'siblings', 
+                              lazy='dynamic')
 
     def __repr__(self):
         return '<Person %r>' % self.id
-    
-    def as_dict(self):
-        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
-
 
 
 
@@ -178,43 +188,17 @@ def card_focus(id):
         return render_template('card_focus.html', person=person)
 
 
-@app.route('/parent_child', methods=['GET'])
-def parent_child():
+@app.route('/relationships', methods=['GET'])
+def relationships():
 
         # sort the table by date created
         people = Person.query.order_by(Person.date_created).all()
         # render the main webpage, passing the ordered table as an object to be used in loops
-        return render_template('parent_child.html', people=people)
+        return render_template('relationships.html', people=people)
 
 
-@app.route('/parent_child_add', methods=['POST'])
-def parent_child_add():
-
-    # get data from form
-    parent_info = request.form['parent']
-    parent_id = re.search("\d+", parent_info).group()
-    child_info = request.form['child']
-    child_id = re.search("\d+", child_info).group()
-    
-    # pull People objects from database
-    parent_person = Person.query.filter_by(id = parent_id).first() # should just return one
-    child_person = Person.query.filter_by(id = child_id).first()
-
-    # if parent is already in parent list, do nothing,
-    # if not, append to parent list
-    if parent_person not in child_person.parents:
-        # submit parenthood
-        child_person.parents.append(parent_person)
-        db.session.commit()
-    # else:
-        # eventually message that the person had already been added in the past
-        # but do no db changes
-    
-    return redirect('/parent_child')
-
-
-@app.route('/parent_child_remove', methods=['POST'])
-def parent_child_remove():
+@app.route('/parent_child_action', methods=['POST'])
+def parent_child_action():
 
     # get data from form
     parent_info = request.form['parent']
@@ -226,14 +210,70 @@ def parent_child_remove():
     parent_person = Person.query.filter_by(id = parent_id).first() # should just return one
     child_person = Person.query.filter_by(id = child_id).first()
 
-    if parent_person in child_person.parents:
+    action = request.form['action']
+
+    if action == "Add":
+        # if parent is already in parent list, do nothing,
+        # if not, append to parent list
+        if parent_person not in child_person.parents and parent_person != child_person: 
+            # submit parenthood
+            child_person.parents.append(parent_person)
+            db.session.commit()
+        # else:
+            # eventually message that the person had already been added in the past
+            # but do no db changes
+    if action == "Remove":
+
+        if parent_person in child_person.parents:
+                
+                # submit parenthood
+                child_person.parents.remove(parent_person)
+                db.session.commit()
+            # else:
+                # eventually message that person was not a parent in the first place
+    
+    return redirect('/relationships')
+
+
+@app.route('/sibling_action', methods=['POST'])
+def sibling_action():
+
+    # get data from form
+    sibling_1_info = request.form['sibling_1']
+    sibling_1_id = re.search("\d+", sibling_1_info).group()
+    sibling_2_info = request.form['sibling_2']
+    sibling_2_id = re.search("\d+", sibling_2_info).group()
+    
+    # pull People objects from database
+    sibling_1_person = Person.query.filter_by(id = sibling_1_id).first() # should just return one
+    sibling_2_person = Person.query.filter_by(id = sibling_2_id).first()
+
+    action = request.form['action']
+
+    if action == "Add":
+        # if parent is already in parent list, do nothing,
+        # if not, append to parent list
+        if sibling_1_person not in sibling_2_person.siblings and sibling_1_person != sibling_2_person:
+            # submit parenthood
+            sibling_2_person.siblings.append(sibling_1_person)
+            sibling_1_person.siblings.append(sibling_2_person)
+            db.session.commit()
+        # else:
+            # eventually message that the person had already been added in the past
+            # but do no db changes
+    if action == "Remove":
+
+        if sibling_1_person in sibling_2_person.siblings:
         
-        # submit parenthood
-        child_person.parents.remove(parent_person)
-        db.session.commit()
-    # else:
-        # eventually message that person was not a parent in the first place
-    return redirect('/parent_child')
+            # submit parenthood
+            sibling_2_person.siblings.remove(sibling_1_person)
+            sibling_1_person.siblings.remove(sibling_2_person)
+            db.session.commit()
+        # else:
+            # eventually message that person was not a parent in the first place
+
+    return redirect('/relationships')
+
 
 @app.route('/cancel', methods=['GET'])
 def cancel():

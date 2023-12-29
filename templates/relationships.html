@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+{% endblock %}
+
+{% block body %} 
+
+<div class="default-grid" id="relationships-grid">
+
+    <!-- grid item 1: logo and app name-->
+    <div class="grid-item grid-item-1">
+        <div class="logo" id="logo-index">
+            <div class="content-container-column">
+                    <img src="{{ url_for('static', filename='logos/green-tree-logo.png') }}" alt="Green Tree Logo">
+                    <h1>Roots</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- grid item 2: Name of Current family-->
+    <div class="grid-item grid-item-2">
+        <div class="current-family-name" id="current-family-name-index">
+            <div class="content-container-row">
+                <h1>Moncus Family</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- grid item 3: Account Tasks Panel -->
+    <div class="grid-item grid-item-3">
+        <div class="account-tasks-panel">
+            <div class="content-container-row">
+                <a class="btn" id='log-in' href="">Log In</a>
+                <a class="btn" id='sign-up' href="">Sign-up</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- grid item 4: App Tasks Panel-->
+    <div class="grid-item grid-item-4">
+        <div class="app-tasks-panel">
+            <div class="content-container-column">
+                <!-- dynamic add-Person form -->
+                <a class="btn" id='addPersonBtn'>Add Person</a>
+                <div id="formContainer"></div>
+                <!-- Back to tree -->
+                <a class="btn" id='to_tree' href="/">Back to Tree</a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- grid item 5: Relationship forms and tables -->
+    <div class="grid-item grid-item-5" id="relationships-container">
+        <!-- Relationships header-->
+        <div class="grid-subitem-1" id="relationships-header">
+            <h2>Relationships</h2>
+        </div>
+
+        <!-- Relationship forms -->
+        <div class="grid-subitem-2" id="forms-container">
+            <div class="form-container">
+                <!-- Parent-Child forms -->
+                <h4>Parents and Children</h4>
+                <form id="parentChildForm" action="/parent_child_action" method="POST">
+
+                    <!-- 1 dropdown -->
+                    <div>
+                        <label for="parent">Parent:</label>
+                        <select id="parent" name="parent">
+                            {% for person in people %}
+                                <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- 2 dropdown -->
+                    <div>
+                        <label for="child">Child:</label>
+                        <select id="child" name="child">
+                            {% for person in people %}
+                                <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="btn-container">
+                        <!-- Add Button -->
+                        <div>
+                            <input type="submit" name="action" value="Add">
+                        </div>
+
+                        <!-- Remove Button -->
+                        <div>
+                            <input type="submit" name="action" value="Remove">
+                        </div>
+                    </div>
+                </form>                
+            </div>
+
+            <div class="form-container">
+                <!-- Sibling form-->
+                <h4>Siblings</h4>
+                <form id="siblingForm" action="/sibling_action" method="POST">
+
+                    <!-- 1 dropdown -->
+                    <div>
+                        <label for="sibling_1">Sibling 1:</label>
+                        <select id="sibling_1" name="sibling_1">
+                            {% for person in people %}
+                                <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- 2 dropdown -->
+                    <div>
+                        <label for="sibling_2">Sibling 2:</label>
+                        <select id="sibling_2" name="sibling_2">
+                            {% for person in people %}
+                                <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="btn-container">
+                        <!-- Add Button -->
+                        <div>
+                            <input type="submit" name="action" value="Add">
+                        </div>
+                        <!-- Remove Button -->
+                        <div>
+                            <input type="submit" name="action" value="Remove">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Table showing relationships -->
+        <div class="grid-subitem-3">
+            <table class="bordered" id="relationship-table">
+                <tr>
+                    <th>Person</th>
+                    <th>Parents</th>
+                    <th>Siblings</th>
+                </tr>
+                {% for person in people %}
+                    <tr>
+                        <td>{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}</td>
+                        <td>
+                            {% for person in person.parents %}
+                            {{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}, 
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for person in person.siblings %}
+                            {{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}, 
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+    </div>
+            
+    <!-- grid item 6: Secondary App Info --> 
+    <div class="grid-item grid-item-6">
+        <div class="secondary-panel">
+            <div class="content-container-column">
+                <h1>None yet</h1>
+            </div>
+        </div>   
+    </div>
+        
+</div>
+
+
+{% endblock %}

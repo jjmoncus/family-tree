@@ -1,0 +1,67 @@
+#relationships-container {
+    display: grid;
+
+    grid-template-columns: 100%;
+    grid-template-rows: 10% 30% auto;
+
+    gap: 0px;
+}
+
+#relationships-container .grid-subitem-1 {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#relationships-container .grid-subitem-2 {
+    grid-area: 2 / 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.grid-subitem-2 .form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.form-container .btn-container {
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+#relationships-container .grid-subitem-3 {
+    grid-area: 3 / 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#parent-child-container #parentChildForm {
+    grid-area: 2 / 1 / span 1 / span 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#parent-child-container #siblingForm {
+    grid-area: 2 / 2 / span 1 / span 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#parent-child-container #parent-child-table {
+
+    grid-area: 3 / 1 / span 1 / span 2;
+    justify-content: center;
+}

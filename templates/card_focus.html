@@ -51,6 +51,14 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>Siblings</td>
+                            <td>
+                                {% for person in person.siblings %}
+                                {{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}, 
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Children</td>
                             <td>
                                 {% for person in person.children %}

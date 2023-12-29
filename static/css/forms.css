@@ -7,11 +7,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--main-item-color);
+    background-color: var(--main-cream);
+    border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    z-index: 999;
-    background: var(--main-bg-filter-color);  
+    box-shadow: 0px 0px 8px var(--main-dark-brown);
+    z-index: 999; 
     backdrop-filter: blur(1px);   
 }
 

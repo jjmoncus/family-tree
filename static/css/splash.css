@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: var(--main-black);
+    background-color: var(--main-dark-brown);
     z-index: 200;
     transition: all 0.5s;
 }
@@ -15,7 +15,7 @@
     justify-content: center;
     height: 100%;
     text-align: center;
-    color: var(--main-white);
+    color: var(--main-cream);
 }
 
 .splash-content {

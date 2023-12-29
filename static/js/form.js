@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                     <div class="btn-container">
                         <input type="submit" class="btn" value="Add">
-                        <a href="/" class="btn">Cancel</a>
+                        <a href="/cancel" class="btn">Cancel</a>
                     </div>
                 </form>
             </div>

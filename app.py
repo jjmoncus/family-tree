@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify
+from flask import Flask, render_template, url_for, request, redirect, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
 # from sqlalchemy.orm import asdict
 from datetime import datetime
@@ -6,6 +6,7 @@ from datetime import datetime
 import re
 
 app = Flask(__name__)
+app.secret_key = b'here is a string'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
@@ -59,7 +60,7 @@ def index():
         try:
             db.session.add(new_person)
             db.session.commit()
-            return redirect('/')
+            return redirect(request.referrer)
         except:
             return 'There was an issue adding your person'
         
@@ -78,7 +79,7 @@ def delete(id):
     try:
         db.session.delete(person_to_delete)
         db.session.commit()
-        return redirect('/')
+        return redirect(request.referrer)
     except:
         return 'There was a problem deleting that person'
 
@@ -177,34 +178,68 @@ def card_focus(id):
         return render_template('card_focus.html', person=person)
 
 
-@app.route('/parent_child', methods=['POST', 'GET'])
+@app.route('/parent_child', methods=['GET'])
 def parent_child():
 
-    if request.method == 'POST':
-       
-        # get data from form
-        parent_info = request.form['parent']
-        parent_id = re.search("\d+", parent_info).group()
-        child_info = request.form['child']
-        child_id = re.search("\d+", child_info).group()
-        
-        # pull People objects from database
-        parent_person = Person.query.filter_by(id = parent_id).first() # should just return one
-        child_person = Person.query.filter_by(id = child_id).first()
-
-        # submit parenthood
-        child_person.parents.append(parent_person)
-        db.session.commit()
-        return redirect('/parent_child')
-    
-    # GET
-    else:
         # sort the table by date created
         people = Person.query.order_by(Person.date_created).all()
         # render the main webpage, passing the ordered table as an object to be used in loops
         return render_template('parent_child.html', people=people)
 
 
+@app.route('/parent_child_add', methods=['POST'])
+def parent_child_add():
+
+    # get data from form
+    parent_info = request.form['parent']
+    parent_id = re.search("\d+", parent_info).group()
+    child_info = request.form['child']
+    child_id = re.search("\d+", child_info).group()
+    
+    # pull People objects from database
+    parent_person = Person.query.filter_by(id = parent_id).first() # should just return one
+    child_person = Person.query.filter_by(id = child_id).first()
+
+    # if parent is already in parent list, do nothing,
+    # if not, append to parent list
+    if parent_person not in child_person.parents:
+        # submit parenthood
+        child_person.parents.append(parent_person)
+        db.session.commit()
+    # else:
+        # eventually message that the person had already been added in the past
+        # but do no db changes
+    
+    return redirect('/parent_child')
+
+
+@app.route('/parent_child_remove', methods=['POST'])
+def parent_child_remove():
+
+    # get data from form
+    parent_info = request.form['parent']
+    parent_id = re.search("\d+", parent_info).group()
+    child_info = request.form['child']
+    child_id = re.search("\d+", child_info).group()
+    
+    # pull People objects from database
+    parent_person = Person.query.filter_by(id = parent_id).first() # should just return one
+    child_person = Person.query.filter_by(id = child_id).first()
+
+    if parent_person in child_person.parents:
+        
+        # submit parenthood
+        child_person.parents.remove(parent_person)
+        db.session.commit()
+    # else:
+        # eventually message that person was not a parent in the first place
+    return redirect('/parent_child')
+
+@app.route('/cancel', methods=['GET'])
+def cancel():
+    # 'GET'
+    # render where you just were
+    return redirect(request.referrer)
 
 # under what circumstances would this ever change? idk
 if __name__ == "__main__":

@@ -10,13 +10,14 @@
     display: inline-block;
     font-size: 10px;
     padding: 8px;
-    background-color: var(--main-btn-color);
+    background-color: var(--main-dark-green);
     text-decoration: none;
+    border: solid 1px var(--main-dark-green);
     border-radius: 4px;
     margin: 8px;
-    color: var(--main-white);
+    color: var(--main-cream);
 }
 
 .btn:hover {
-    background-color: #555;
+    background-color: var(--main-light-green);
 }

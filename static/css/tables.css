@@ -2,11 +2,12 @@ table {
     margin: auto;
     border-collapse: collapse;
     width: 80%;
+    background-color: var(--main-cream);
 }
 
 tr {
-    height: 50px;
-    background-color:var(--main-item-color);
+    height: 25px;
+    
 }
 /*
 tr:hover {
@@ -15,16 +16,14 @@ tr:hover {
 */
 td, th {
     text-align: center;
-    border: solid 1px var(--main-black);
     padding: 10px;
 }
 
-th {
-    background-color: var(--main-item-color);
+
+.bordered th, td {
+    border: solid 1px var(--main-dark-brown);  
 }
 
-/*
-th:hover {
-    background-color: var(--main-item-color-hover);
+.borderless th, td {
+    border: none;    
 }
-*/

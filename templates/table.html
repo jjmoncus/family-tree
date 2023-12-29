@@ -32,7 +32,7 @@
                 <th>Middle Name</th>
                 <th>Last Name</th>
                 <th>Nick Name</th>
-                <th>Parent ID</th>
+                <th>Parents</th>
                 <th>Date added</th>
                 <th>Actions</th>
             </tr>
@@ -44,7 +44,7 @@
                     <td>{{ person.middle_name }}</td>
                     <td>{{ person.last_name }}</td>
                     <td>{{ person.nick_name }}</td>
-                    <td>{{ person.parent_id }}</td>
+                    <td>{{ person.parents }}</td>
                     <td>{{ person.date_created.date() }}</td>
                     <td>
                         <a href="/delete/{{person.id}}">Delete</a>

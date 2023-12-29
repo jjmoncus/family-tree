@@ -1,26 +1,41 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
+# from sqlalchemy.orm import asdict
 from datetime import datetime
+# for string manipulation (analogous to `stringr`)
+import re
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
-class Person(db.Model):
-    
-    # required
-    id = db.Column(db.Integer, primary_key = True)
-    first_name = db.Column(db.String(200), nullable = False)
-    last_name = db.Column(db.String(200), nullable = False)
+# Association Table
+person_parent_association = db.Table(
+    'person_parent_association',
+    db.Column('person_id', db.Integer, db.ForeignKey('person.id')),
+    db.Column('parent_id', db.Integer, db.ForeignKey('person.id'))
+)
 
-    # not required
-    middle_name = db.Column(db.String(200), nullable = False, default='')
-    nick_name = db.Column(db.String(200), nullable = False, default='')
-    parent_id = db.Column(db.Integer, primary_key = False)
-    date_created = db.Column(db.DateTime, default = datetime.utcnow)
+class Person(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(200), nullable=False)
+    last_name = db.Column(db.String(200), nullable=False)
+    middle_name = db.Column(db.String(200), nullable=False, default='')
+    nick_name = db.Column(db.String(200), nullable=False, default='')
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Define the many-to-many relationship between parents and children
+    parents = db.relationship('Person', 
+                              secondary = person_parent_association,
+                              primaryjoin = id == person_parent_association.c.person_id,
+                              secondaryjoin = id == person_parent_association.c.parent_id,
+                              backref = db.backref('children', lazy='dynamic'))
 
     def __repr__(self):
         return '<Person %r>' % self.id
+    
+    def as_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
 
 
 
@@ -34,14 +49,12 @@ def index():
         last_name = request.form['last_name']
         middle_name = request.form['middle_name']
         nick_name = request.form['nick_name']
-        parent_id = request.form['parent_id']
 
         # pass form data to new class instance
         new_person = Person(first_name = first_name,
                             last_name = last_name,
                             middle_name = middle_name,
-                            nick_name = nick_name,
-                            parent_id = parent_id)
+                            nick_name = nick_name)
 
         try:
             db.session.add(new_person)
@@ -80,7 +93,6 @@ def update_table(id):
         person.last_name = request.form['last_name']
         person.middle_name = request.form['middle_name']
         person.nick_name = request.form['nick_name']
-        person.parent_id = request.form['parent_id']
 
 
         try:
@@ -106,7 +118,6 @@ def update_tree(id):
         person.last_name = request.form['last_name']
         person.middle_name = request.form['middle_name']
         person.nick_name = request.form['nick_name']
-        person.parent_id = request.form['parent_id']
 
 
         try:
@@ -129,14 +140,12 @@ def table():
         last_name = request.form['last_name']
         middle_name = request.form['middle_name']
         nick_name = request.form['nick_name']
-        parent_id = request.form['parent_id']
 
         # pass form data to new class instance
         new_person = Person(first_name = first_name,
                             last_name = last_name,
                             middle_name = middle_name,
-                            nick_name = nick_name,
-                            parent_id = parent_id)
+                            nick_name = nick_name)
 
         try:
             db.session.add(new_person)
@@ -161,11 +170,39 @@ def card_focus(id):
         # maybe do some stuff later
         return redirect('/')
     
-    # 'GET'
+    # GET
     else:
         # just render the card_focus page, i.e. a page just showing the info
         # for `person`
         return render_template('card_focus.html', person=person)
+
+
+@app.route('/parent_child', methods=['POST', 'GET'])
+def parent_child():
+
+    if request.method == 'POST':
+       
+        # get data from form
+        parent_info = request.form['parent']
+        parent_id = re.search("\d+", parent_info).group()
+        child_info = request.form['child']
+        child_id = re.search("\d+", child_info).group()
+        
+        # pull People objects from database
+        parent_person = Person.query.filter_by(id = parent_id).first() # should just return one
+        child_person = Person.query.filter_by(id = child_id).first()
+
+        # submit parenthood
+        child_person.parents.append(parent_person)
+        db.session.commit()
+        return redirect('/parent_child')
+    
+    # GET
+    else:
+        # sort the table by date created
+        people = Person.query.order_by(Person.date_created).all()
+        # render the main webpage, passing the ordered table as an object to be used in loops
+        return render_template('parent_child.html', people=people)
 
 
 

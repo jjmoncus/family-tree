@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+{% endblock %}
+
+{% block body %} 
+    
+<!-- Back to tree -->
+<a class="btn" id='to_tree' href="/">Back to Tree</a>
+
+<h2>Set Parent-Child Relationship</h2>
+
+<!-- Parent-Child form -->
+<form id="parentChildForm" action="/parent_child" method="POST">
+
+    <!-- Parent dropdown -->
+    <div>
+        <label for="parent">Select Parent:</label>
+        <select id="parent" name="parent">
+            {% for person in people %}
+                <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <!-- Child dropdown -->
+    <div>
+        <label for="child">Select Child:</label>
+        <select id="child" name="child">
+            {% for person in people %}
+                <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <!-- Button to set the parent-child relationship -->
+    <div>
+        <input type="submit" value="Submit">
+    </div>
+</form>
+
+<!-- Table for parent-child relationships -->
+<table id="parent-child-table">
+    <tr>
+        <th>Person</th>
+        <th>Parents</th>
+    </tr>
+    {% for person in people %}
+        <tr>
+            <td>{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}</td>
+            <td>
+                {% for person in person.parents %}
+                {{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}, 
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

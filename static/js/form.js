@@ -28,12 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         <label>Nick Name</label>
                         <input type="text", name='nick_name', id='nick_name'>
                     </div>
-                    <div>
-                        <label>Parent ID</label>
-                        <input type="number", name='parent_id', id='parent_id'>
-                    </div>
-
-                    
                     <div class="btn-container">
                         <input type="submit" class="btn" value="Add">
                         <a href="/" class="btn">Cancel</a>

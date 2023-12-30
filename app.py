@@ -300,6 +300,89 @@ def focus(id):
 
     return render_template('focus.html', person=person, parents=parents_table, siblings=siblings_table, children=children_table)
 
+@app.route('/add_parent/<int:id>', methods=['POST'])
+def add_parent(id):
+    # first, add the person to the database
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    middle_name = request.form['middle_name']
+    nick_name = request.form['nick_name']
+
+    new_person = Person(first_name = first_name,
+                        last_name = last_name,
+                        middle_name = middle_name,
+                        nick_name = nick_name)
+
+    try:
+        db.session.add(new_person)
+        db.session.commit()
+    except:
+        return 'There was an issue adding your person'
+    
+    # once added, name them a parent of person
+    person = Person.query.get_or_404(id)
+    person.parents.append(new_person)
+    db.session.commit()
+
+    # and route back where you were
+    return redirect(request.referrer)
+
+@app.route('/add_sibling/<int:id>', methods=['POST'])
+def add_sibling(id):
+    # first, add the person to the database
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    middle_name = request.form['middle_name']
+    nick_name = request.form['nick_name']
+
+    new_person = Person(first_name = first_name,
+                        last_name = last_name,
+                        middle_name = middle_name,
+                        nick_name = nick_name)
+
+    try:
+        db.session.add(new_person)
+        db.session.commit()
+    except:
+        return 'There was an issue adding your person'
+    
+    # once added, name them a parent of person
+    person = Person.query.get_or_404(id)
+    person.siblings.append(new_person)
+    db.session.commit()
+
+    # and route back where you were
+    return redirect(request.referrer)
+
+@app.route('/add_child/<int:id>', methods=['POST'])
+def add_child(id):
+    # first, add the person to the database
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    middle_name = request.form['middle_name']
+    nick_name = request.form['nick_name']
+
+    new_person = Person(first_name = first_name,
+                        last_name = last_name,
+                        middle_name = middle_name,
+                        nick_name = nick_name)
+
+    try:
+        db.session.add(new_person)
+        db.session.commit()
+    except:
+        return 'There was an issue adding your person'
+    
+    # once added, name them a parent of person
+    person = Person.query.get_or_404(id)
+    person.children.append(new_person)
+    db.session.commit()
+
+    # and route back where you were
+    return redirect(request.referrer)
+
+
+
 # under what circumstances would this ever change? idk
 if __name__ == "__main__":
     # runs app

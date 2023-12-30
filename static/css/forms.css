@@ -1,5 +1,5 @@
 /* dynamic form */
-#formContainer {
+.formContainer {
     width: 66%;
     height: 66%;
     display: none;
@@ -15,7 +15,7 @@
     backdrop-filter: blur(1px);   
 }
 
-#formContainer div.form {
+.formContainer div.form {
     /* these are so all children stay vertically and horizontally center */
     display: flex;
     align-items: center;
@@ -24,7 +24,7 @@
     /* ------------------------------ */
 }
 
-#formContainer div.form #personForm {
+.formContainer div.form #personForm {
     width: 300px;
     height: auto;
 
@@ -37,6 +37,6 @@
     /* ------------------------------ */
 }
 
-#formContainer div.form #personForm div {
+.formContainer div.form #personForm div {
     margin: 10px;
 }

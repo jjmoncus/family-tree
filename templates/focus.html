@@ -51,8 +51,8 @@
                 <a class="btn" id='Home' href = "/">Home</a>
                 
                 <!-- dynamic add-Person form -->
-                <a class="btn" id='addPersonBtn'>Add Person</a>
-                <div id="formContainer"></div>
+                <a class="btn" id='addPersonBtn'>New Person</a>
+                <div class="formContainer" id="personFormContainer"></div>
 
                 <!-- Relationships -->
                 <a class="btn" id='addPersonBtn' href="/relationships">Relationships</a>
@@ -159,7 +159,18 @@
     <div class="grid-item grid-item-6">
         <div class="secondary-panel">
             <div class="content-container-column">
-                <h1>None yet</h1>
+                
+                <!-- dynamic add-Parent form -->
+                <a class="btn" id='addParentBtn'>New Parent</a>
+                <div class="formContainer" id="parentFormContainer" data-person-id="{{person.id}}"></div>
+
+                <!-- dynamic add-Sibling form -->
+                <a class="btn" id='addSiblingBtn'>New Sibling</a>
+                <div class="formContainer" id="siblingFormContainer" data-person-id="{{person.id}}"></div>
+
+                <!-- dynamic add-Child form -->
+                <a class="btn" id='addChildBtn'>New Child</a>
+                <div class="formContainer" id="childFormContainer" data-person-id="{{person.id}}"></div>
             </div>
         </div>   
     </div>

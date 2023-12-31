@@ -8,8 +8,10 @@
 }
 
 .focus-layer {
+    height: 100%;
     display: inline-flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-bottom: 30px;
 }

@@ -93,7 +93,6 @@ def delete(id):
     except:
         return 'There was a problem deleting that person'
 
-
 @app.route('/update_table/<int:id>', methods=['POST', 'GET'])
 def update_table(id):
     person = Person.query.get_or_404(id)
@@ -117,8 +116,6 @@ def update_table(id):
         # for `person` to be updated
         return render_template('update_table.html', person=person)
     
-
-
 @app.route('/update_tree/<int:id>', methods=['POST', 'GET'])
 def update_tree(id):
     person = Person.query.get_or_404(id)
@@ -172,7 +169,6 @@ def table():
         # render the main webpage, passing the ordered table as an object to be used in loops
         return render_template('table.html', people=people)
 
-
 @app.route('/big_card/<int:id>', methods=['POST', 'GET'])
 def big_card(id):
     person = Person.query.get_or_404(id)
@@ -187,7 +183,6 @@ def big_card(id):
         # for `person`
         return render_template('big_card.html', person=person)
 
-
 @app.route('/relationships', methods=['GET'])
 def relationships():
 
@@ -195,7 +190,6 @@ def relationships():
         people = Person.query.order_by(Person.date_created).all()
         # render the main webpage, passing the ordered table as an object to be used in loops
         return render_template('relationships.html', people=people)
-
 
 @app.route('/parent_child_action', methods=['POST'])
 def parent_child_action():
@@ -233,7 +227,6 @@ def parent_child_action():
                 # eventually message that person was not a parent in the first place
     
     return redirect('/relationships')
-
 
 @app.route('/sibling_action', methods=['POST'])
 def sibling_action():
@@ -274,13 +267,11 @@ def sibling_action():
 
     return redirect('/relationships')
 
-
 @app.route('/cancel', methods=['GET'])
 def cancel():
     # 'GET'
     # render where you just were
     return redirect(request.referrer)
-
 
 @app.route('/focus/<int:id>', methods=['GET'])
 def focus(id):
@@ -294,6 +285,7 @@ def focus(id):
     all_siblings = siblings + [person]
 
     parents_table = Person.query.filter(Person.id.in_([parent.id for parent in parents])).distinct().all()
+    # need to be able to sort siblings_table so that 'person' is in the middle, somehow
     siblings_table = Person.query.filter(Person.id.in_([sibling.id for sibling in all_siblings])).distinct().all()
     children_table = Person.query.filter(Person.id.in_([child.id for child in children])).distinct().all()
 

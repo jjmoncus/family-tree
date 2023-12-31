@@ -1,24 +1,25 @@
-function formHTML(action = "/", personId = 0) {
+/*
+function formHTML(action = "/", personId = 0, first_name = "", middle_name = "", last_name = "", nick_name = "") {
     
     // form inputs
     const formHTML = `
-        <div class = 'form' id="interactive-form">
+        <div class = 'form'>
             <form id="personForm" action="${action}/${personId}" method="POST">
                 <div>
                     <label>First Name</label>
-                    <input type="text", name='first_name', id='first_name'>    
+                    <input type="text", name='first_name', id='first_name', value = '${first_name}'>    
                 </div>
                 <div>
                     <label>Middle Name</label>
-                    <input type="text", name='middle_name', id='middle_name'>
+                    <input type="text", name='middle_name', id='middle_name', value = '${middle_name}'>
                 </div>
                 <div>
                     <label>Last Name</label>
-                    <input type="text", name='last_name', id='last_name'>
+                    <input type="text", name='last_name', id='last_name', value = '${last_name}'>
                 </div>
                 <div>
                     <label>Nick Name</label>
-                    <input type="text", name='nick_name', id='nick_name'>
+                    <input type="text", name='nick_name', id='nick_name', value = '${nick_name}'>
                 </div>
                 <div class="btn-container">
                     <input type="submit" class="btn" value="Add">
@@ -30,6 +31,73 @@ function formHTML(action = "/", personId = 0) {
 
     return formHTML
 }  
+*/
+
+function form(action = "/", personId = 0, first_name = "", middle_name = "", last_name = "", nick_name = "") {
+    
+    // Create form container
+    const formContainer = document.createElement("div");
+    formContainer.classList.add("form");
+
+    // Create form element
+    const form = document.createElement("form");
+    form.id = "personForm";
+    form.action = `${action}/${personId}`;
+    form.method = "POST";
+
+    // Create input elements
+    const inputElements = [
+        { type: "text", name: "first_name", id: "first_name", value: first_name, label: "First Name" },
+        { type: "text", name: "middle_name", id: "middle_name", value: middle_name, label: "Middle Name" },
+        { type: "text", name: "last_name", id: "last_name", value: last_name, label: "Last Name" },
+        { type: "text", name: "nick_name", id: "nick_name", value: nick_name, label: "Nick Name" }
+    ];
+
+    inputElements.forEach(inputData => {
+        const inputDiv = document.createElement("div");
+        const label = document.createElement("label");
+        label.textContent = inputData.label;
+        const input = document.createElement("input");
+        Object.entries(inputData).forEach(([key, value]) => {
+            if (key !== "label") {
+                input[key] = value;
+            }
+        });
+
+        inputDiv.appendChild(label);
+        inputDiv.appendChild(input);
+        form.appendChild(inputDiv);
+    });
+    
+    // Create button container
+    const btnContainer = document.createElement("div");
+    btnContainer.classList.add("btn-container");
+
+    // Create submit button
+    const submitBtn = document.createElement("input");
+    submitBtn.type = "submit";
+    submitBtn.classList.add("btn");
+    submitBtn.value = "Add";
+
+    // Create cancel button
+    const cancelBtn = document.createElement("a");
+    cancelBtn.href = "/cancel";
+    cancelBtn.classList.add("btn");
+    cancelBtn.textContent = "Cancel";
+
+    // Append buttons to button container
+    btnContainer.appendChild(submitBtn);
+    btnContainer.appendChild(cancelBtn);
+
+    // Append button container to form
+    form.appendChild(btnContainer);
+
+    // Append form to form container
+    formContainer.appendChild(form);
+
+    return formContainer;
+}
+
 
 
 // add person button
@@ -39,43 +107,138 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addPersonBtn.addEventListener("click", function () {
         const personId = document.getElementById("personFormContainer").getAttribute("data-person-id") || "";
-        personFormContainer.innerHTML = formHTML(action="/", personId);
+        personFormContainer.appendChild(form(action="/", personId));
         personFormContainer.style.display = "block";
     });
 })
 
-// add Parent button
+// New Parent button
 document.addEventListener("DOMContentLoaded", function () {
     const addParentBtn = document.getElementById("addParentBtn");
     const parentFormContainer = document.getElementById("parentFormContainer");
 
     addParentBtn.addEventListener("click", function () {
         const personId = document.getElementById("parentFormContainer").getAttribute("data-person-id") || "";
-        parentFormContainer.innerHTML = formHTML(action="/add_parent", personId);
+        parentFormContainer.appendChild(form(action="/add_parent", personId));
         parentFormContainer.style.display = "block";
     });
 })
 
-// add Sibling button
+// New Sibling button
 document.addEventListener("DOMContentLoaded", function () {
     const addSiblingBtn = document.getElementById("addSiblingBtn");
     const siblingFormContainer = document.getElementById("siblingFormContainer");
 
+    // whenever "addSibling Button" is clicked
     addSiblingBtn.addEventListener("click", function () {
         const personId = document.getElementById("siblingFormContainer").getAttribute("data-person-id") || "";
-        siblingFormContainer.innerHTML = formHTML(action="/add_sibling", personId);
+        siblingFormContainer.appendChild(form(action="/add_sibling", personId));
         siblingFormContainer.style.display = "block";
     });
 })
 
-// add Child button
+// New Child button
 document.addEventListener("DOMContentLoaded", function () {
     const addChildBtn = document.getElementById("addChildBtn");
     const childFormContainer = document.getElementById("childFormContainer");
 
     addChildBtn.addEventListener("click", function () {
         const personId = document.getElementById("childFormContainer").getAttribute("data-person-id") || "";
-        childFormContainer.innerHTML = formHTML(action="/add_child", personId);
+        childFormContainer.appendChild(form(action="/add_child", personId));
         childFormContainer.style.display = "block";
     });
 })
+
+async function getPersonInfo(personId) {
+    try {
+        const response = await fetch(`/api/person/${personId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+/*
+// Open the appropriate update form whenever any update buttons are pushed
+document.addEventListener("DOMContentLoaded", function () {
+    const updateBtns = document.getElementsByClassName("updateBtn");
+
+    Array.from(updateBtns).forEach(function(updateBtn) {
+
+        updateBtn.addEventListener("click", function () {
+            console.log('Update button clicked');
+        
+            const updateFormContainer = document.createElement("div");
+            updateFormContainer.classList.add("form-container");
+            updateFormContainer.classList.add("updateFormContainer");
+            updateFormContainer.setAttribute("personId", personId);
+        
+            const container = document.getElementById("secondary-panel-column-container");
+            container.appendChild(updateFormContainer);
+            console.log('Update form container appended');
+        
+            personId = updateBtn.getAttribute("personId");
+            const person_info = getPersonInfo(personId);
+            console.log('Person info fetched:', person_info);
+        
+            if (person_info) {
+                updateFormContainer.innerHTML = form(action="/update", 
+                                                    personId=personId, 
+                                                    first_name=person_info.first_name, 
+                                                    middle_name=person_info.middle_name, 
+                                                    last_name=person_info.last_name, 
+                                                    nick_name=person_info.nick_name);
+                updateFormContainer.style.display = "block";
+                console.log('Update form content populated');
+            } else {
+                console.error('Failed to fetch person information');
+            }
+        });
+        
+        
+    })
+
+    
+})
+*/
+
+document.addEventListener("click", function (event) {
+    const updateBtn = event.target.closest(".updateBtn");
+
+    if (updateBtn) {
+        const personId = updateBtn.getAttribute("personId");
+
+        // create a form container  
+        const updateFormContainer = document.createElement("div");
+        updateFormContainer.classList.add("formContainer");
+        updateFormContainer.classList.add("updateFormContainer");
+        updateFormContainer.setAttribute("personId", personId);
+
+        // Putting it next to all new_... Button for now      
+        const panelContainer = document.getElementById("secondary-panel-column-container");
+        panelContainer.appendChild(updateFormContainer);
+
+        // get person's info for form
+        getPersonInfo(personId)
+            .then(person_info => {
+                // Insert form content into container
+                const form_to_add = form("/update", 
+                personId, 
+                person_info.first_name, 
+                person_info.middle_name, 
+                person_info.last_name, 
+                person_info.nick_name);
+
+                updateFormContainer.appendChild(form_to_add);
+                updateFormContainer.style.display = "block";
+            })
+            .catch(error => {
+                console.error('Error fetching person information:', error);
+            });
+    }
+});

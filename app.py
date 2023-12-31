@@ -382,6 +382,37 @@ def add_child(id):
     return redirect(request.referrer)
 
 
+@app.route('/api/person/<int:id>', methods=['GET'])
+def get_person(id):
+    
+    person = Person.query.get_or_404(id)
+        # Sample data, replace with actual database query
+    person_data = {
+            'first_name': person.first_name,
+            'middle_name': person.middle_name,
+            'last_name': person.last_name,
+            'nick_name': person.nick_name,
+            # Add more fields as needed
+            }
+    return jsonify(person_data)
+
+@app.route('/update/<int:id>', methods=['POST'])
+def update(id):
+    
+    person = Person.query.get_or_404(id)
+    
+    # set class instance's attributes to those from form
+    person.first_name = request.form['first_name']
+    person.last_name = request.form['last_name']
+    person.middle_name = request.form['middle_name']
+    person.nick_name = request.form['nick_name']
+
+    try:
+        db.session.commit()
+        return redirect(request.referrer)
+    except:
+        return 'There was an issue updating your person'
+    
 
 # under what circumstances would this ever change? idk
 if __name__ == "__main__":

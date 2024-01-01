@@ -76,6 +76,13 @@
 
     <!-- grid item 5: Main Tree View -->
     <div class="grid-item grid-item-5">
+        
+        <div class="search-bar-panel">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by name..." oninput="filterCards()">
+            </div>
+        </div>
+
         <div class="tree-panel">
             <div class="content-tree">
                 {% if people|length < 1 %}
@@ -86,7 +93,7 @@
                     
                     {% for person in people %}
                     
-                    <div class="card-container" person-id = "{{person.id}}" person-first_name="{{person.first_name}}"
+                    <div class="card-container" person-id = "{{person.id}}" person-first_name="{{person.first_name}}" person-middle_name="{{person.middle_name}}"
                     person-last_name="{{person.last_name}}", person-nick_name="{{person.nick_name}}">
                     <!-- cards are inserted dynamically using Javascript (see cards.js)-->
                     </div>
@@ -96,6 +103,7 @@
                 {% endif %}
             </div>
         </div>
+
     </div>
     
     <!-- grid item 6: Secondary App Info --> 

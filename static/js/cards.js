@@ -1,40 +1,4 @@
-/*
-function cardHTML(personId = 0, first_name = "", last_name = "", nick_name = "") {
-    
-    // card inputs
-    const formHTML = `
-    <div class="card">
-        <a class="card-link" href="/focus/${personId}">
-            <div class="card-content">
-                <img src="{{ url_for('static', filename='logos/empty-prof-pic.png') }}" alt="Profile Picture">
-                {% if ${nick_name} == "" %} 
-                <h3>${first_name} ${last_name}</h3>
-                {% else %} 
-                <h3>${nick_name} ${last_name}</h3>
-                {% endif %}
-                <div class="icon-btn-container">
-                    <a href="/delete/${personId}" class="icon-btn">
-                        X
-                        <!--<img src="{{ url_for('static', filename='logos/x.png') }}" alt="Delete">-->
-                    </a>
-                    <a class="icon-btn updateBtn">
-                    E
-                        <!--<img src="{{ url_for('static', filename='logos/edit.png') }}" alt="Edit">-->
-                    </a>
-                    <div class="formContainer" id="updateFormContainer"></div>
-                    <a href="/big_card/${personId}" class="icon-btn">
-                        R
-                        <!--<img src="{{ url_for('static', filename='logos/read.png') }}" alt="Read">-->
-                    </a>
-                </div>
-            </div>
-        </a>
-    </div>
-    `;
-
-    return formHTML
-}  
-*/
+// HTML for a card
 function cardHTML(personId = 0, first_name = "", last_name = "", nick_name = "") {
     // Create card container
     const cardContainer = document.createElement("div");
@@ -80,18 +44,6 @@ function cardHTML(personId = 0, first_name = "", last_name = "", nick_name = "")
     updateBtn.textContent = "E";
     updateBtn.setAttribute("personId", personId);
 
-    //Rethinkiing this approach
-    // instead of having a new form container for every card
-    // there will be one formContainer somewhere in the DOM
-    // and we just populate it with their information and edit action route
-    
-    // -- Create dynamic form insert
-    // -- const updateFormContainer = document.createElement("div");
-    // -- updateFormContainer.classList.add("form-container");
-    // -- updateFormContainer.classList.add("updateFormContainer");
-    // -- updateFormContainer.setAttribute("personId", personId);
-    
-
     // Create read button
     const readBtn = document.createElement("a");
     readBtn.classList.add("icon-btn");
@@ -118,9 +70,7 @@ function cardHTML(personId = 0, first_name = "", last_name = "", nick_name = "")
     return cardHTMLString;
 }
 
-
-
-// load cards wherever appropriate
+// load cards into all card-containers once all other stuff is loaded
 document.addEventListener("DOMContentLoaded", function () {
     const cardContainers = document.getElementsByClassName("card-container");
 
@@ -128,8 +78,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const personId = container.getAttribute("person-id") || "";
         const first_name = container.getAttribute("person-first_name") || "";
+        const middle_name = container.getAttribute("person-middle_name") || "";
         const last_name = container.getAttribute("person-last_name") || "";
         const nick_name = container.getAttribute("person-nick_name") || "";
+        
         container.innerHTML = cardHTML(
             personId, 
             first_name,
@@ -137,3 +89,28 @@ document.addEventListener("DOMContentLoaded", function () {
             nick_name);
       });
 })
+
+// filter cards as search input changes
+function filterCards() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.toLowerCase();
+
+    const cardContainers = document.getElementsByClassName('card-container');
+
+    Array.from(cardContainers).forEach(function (container) {
+
+        const firstName = container.getAttribute('person-first_name').toLowerCase() || '';
+        const middleName = container.getAttribute('person-middle_name').toLowerCase() || '';
+        const lastName = container.getAttribute('person-last_name').toLowerCase() || '';
+        const nickName = container.getAttribute('person-nick_name').toLowerCase() || '';
+
+        const fullAndNickName = `${firstName} ${middleName} ${lastName} ${nickName}`;
+
+        if (fullAndNickName.includes(searchTerm)) {
+            container.style.display = 'inline-flex'; // inline-flex is the appropriate display setting for cards for now
+
+        } else {
+            container.style.display = 'none';
+        }
+    });
+}

@@ -1,5 +1,13 @@
 /* for cards */
 
+.content-tree {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
 .card-container {
     width: 15%;
     max-width: 300px;

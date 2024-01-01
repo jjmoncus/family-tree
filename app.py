@@ -228,39 +228,60 @@ def parent_child_action():
     
     return redirect('/relationships')
 
+
+def connect_sibling(person_1, person_2):
+
+    if person_1 not in person_2.siblings and person_1 != person_2:
+                # submit parenthood
+                person_2.siblings.append(person_1)
+                person_1.siblings.append(person_2)
+
+def remove_sibling(person_1, person_2):
+
+    if person_1 in person_2.siblings:
+            
+            person_2.siblings.remove(person_1)
+            person_1.siblings.remove(person_2)
+
+
 @app.route('/sibling_action', methods=['POST'])
 def sibling_action():
 
     # get data from form
-    sibling_1_info = request.form['sibling_1']
-    sibling_1_id = re.search("\d+", sibling_1_info).group()
-    sibling_2_info = request.form['sibling_2']
-    sibling_2_id = re.search("\d+", sibling_2_info).group()
+    person_1_info = request.form['sibling_1']
+    person_1_id = re.search("\d+", person_1_info).group()
+    person_2_info = request.form['sibling_2']
+    person_2_id = re.search("\d+", person_2_info).group()
     
     # pull People objects from database
-    sibling_1_person = Person.query.filter_by(id = sibling_1_id).first() # should just return one
-    sibling_2_person = Person.query.filter_by(id = sibling_2_id).first()
+    person_1 = Person.query.filter_by(id = person_1_id).first() # should just return one
+    person_2 = Person.query.filter_by(id = person_2_id).first()
+
+    already_1_siblings = person_1.siblings
+    already_2_siblings = person_2.siblings
 
     action = request.form['action']
 
     if action == "Add":
         # if parent is already in parent list, do nothing,
         # if not, append to parent list
-        if sibling_1_person not in sibling_2_person.siblings and sibling_1_person != sibling_2_person:
-            # submit parenthood
-            sibling_2_person.siblings.append(sibling_1_person)
-            sibling_1_person.siblings.append(sibling_2_person)
-            db.session.commit()
+        connect_sibling(person_1, person_2)
+        # connect new siblings for all the previous siblings
+        for sibling in already_1_siblings:
+            connect_sibling(sibling, person_2)
+        for sibling in already_2_siblings:
+            connect_sibling(sibling, person_1)
+        db.session.commit()
         # else:
             # eventually message that the person had already been added in the past
             # but do no db changes
     if action == "Remove":
-
-        if sibling_1_person in sibling_2_person.siblings:
-        
-            # submit parenthood
-            sibling_2_person.siblings.remove(sibling_1_person)
-            sibling_1_person.siblings.remove(sibling_2_person)
+            remove_sibling(person_1, person_2)
+            # remove sibling for all the previous siblings
+            for sibling in already_1_siblings:
+                remove_sibling(sibling, person_2)
+            for sibling in already_2_siblings:
+                remove_sibling(sibling, person_1)
             db.session.commit()
         # else:
             # eventually message that person was not a parent in the first place
@@ -321,7 +342,7 @@ def add_parent(id):
 
 @app.route('/add_sibling/<int:id>', methods=['POST'])
 def add_sibling(id):
-    # first, add the person to the database
+    # first, add the new person to the database
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     middle_name = request.form['middle_name']
@@ -338,9 +359,12 @@ def add_sibling(id):
     except:
         return 'There was an issue adding your person'
     
-    # once added, name them a parent of person
+    # once added, name them a sibling of person, and all person's previous siblings
     person = Person.query.get_or_404(id)
+    already_siblings = person.siblings
     person.siblings.append(new_person)
+    for sibling in already_siblings:
+        sibling.siblings.append(new_person)
     db.session.commit()
 
     # and route back where you were

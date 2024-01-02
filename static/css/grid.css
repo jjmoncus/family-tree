@@ -1,11 +1,11 @@
 .default-grid {
+    width: 100%;
     display: grid;
     grid-template-columns: 10% auto 10%;
     grid-template-rows: 150px auto;
 
     gap: 0px;
-    height: 90vh;
-    width: 95vw;
+    height: 100vh;
 
 }
 

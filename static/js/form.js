@@ -1,38 +1,4 @@
-/*
-function formHTML(action = "/", personId = 0, first_name = "", middle_name = "", last_name = "", nick_name = "") {
-    
-    // form inputs
-    const formHTML = `
-        <div class = 'form'>
-            <form id="personForm" action="${action}/${personId}" method="POST">
-                <div>
-                    <label>First Name</label>
-                    <input type="text", name='first_name', id='first_name', value = '${first_name}'>    
-                </div>
-                <div>
-                    <label>Middle Name</label>
-                    <input type="text", name='middle_name', id='middle_name', value = '${middle_name}'>
-                </div>
-                <div>
-                    <label>Last Name</label>
-                    <input type="text", name='last_name', id='last_name', value = '${last_name}'>
-                </div>
-                <div>
-                    <label>Nick Name</label>
-                    <input type="text", name='nick_name', id='nick_name', value = '${nick_name}'>
-                </div>
-                <div class="btn-container">
-                    <input type="submit" class="btn" value="Add">
-                    <a href="/cancel" class="btn">Cancel</a>
-                </div>
-            </form>
-        </div>
-    `;
-
-    return formHTML
-}  
-*/
-
+// form raw HTML
 function form(action = "/", personId = 0, first_name = "", middle_name = "", last_name = "", nick_name = "") {
     
     // Create form container
@@ -162,50 +128,6 @@ async function getPersonInfo(personId) {
         return null;
     }
 }
-
-/*
-// Open the appropriate update form whenever any update buttons are pushed
-document.addEventListener("DOMContentLoaded", function () {
-    const updateBtns = document.getElementsByClassName("updateBtn");
-
-    Array.from(updateBtns).forEach(function(updateBtn) {
-
-        updateBtn.addEventListener("click", function () {
-            console.log('Update button clicked');
-        
-            const updateFormContainer = document.createElement("div");
-            updateFormContainer.classList.add("form-container");
-            updateFormContainer.classList.add("updateFormContainer");
-            updateFormContainer.setAttribute("personId", personId);
-        
-            const container = document.getElementById("secondary-panel-column-container");
-            container.appendChild(updateFormContainer);
-            console.log('Update form container appended');
-        
-            personId = updateBtn.getAttribute("personId");
-            const person_info = getPersonInfo(personId);
-            console.log('Person info fetched:', person_info);
-        
-            if (person_info) {
-                updateFormContainer.innerHTML = form(action="/update", 
-                                                    personId=personId, 
-                                                    first_name=person_info.first_name, 
-                                                    middle_name=person_info.middle_name, 
-                                                    last_name=person_info.last_name, 
-                                                    nick_name=person_info.nick_name);
-                updateFormContainer.style.display = "block";
-                console.log('Update form content populated');
-            } else {
-                console.error('Failed to fetch person information');
-            }
-        });
-        
-        
-    })
-
-    
-})
-*/
 
 document.addEventListener("click", function (event) {
     const updateBtn = event.target.closest(".updateBtn");

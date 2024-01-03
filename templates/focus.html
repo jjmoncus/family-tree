@@ -124,6 +124,85 @@
                 <!-- dynamic add-Child form -->
                 <a class="btn" id='addChildBtn'>New Child</a>
                 <div class="formContainer" id="childFormContainer" data-person-id="{{person.id}}"></div>
+
+                <!-- Connect or Disconnect parent -->
+                <div class="form-container">
+                    <form id="parentForm" action="/connect/parent/{{person.id}}" method="POST" data-person-id="{{person.id}}">
+                        <!-- 1 dropdown -->
+                        <div>
+                            <label for="parent">Parent:</label>
+                            <select id="parent" name="parent">
+                                {% for person in people %}
+                                    <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+                                {% endfor %}
+                            </select>
+                        </div> 
+                        <div class="btn-container">
+                            <!-- Add Button -->
+                            <div>
+                                <input type="submit" name="action" value="Connect">
+                            </div>
+    
+                            <!-- Remove Button -->
+                            <div>
+                                <input type="submit" name="action" value="Disconnect">
+                            </div>
+                        </div>
+                    </form>                
+                </div>
+
+                <!-- Connect or Disconnect sibling -->
+                <div class="form-container">
+                    <!-- Sibling forms -->
+                    <form id="siblingForm" action="/connect/sibling/{{person.id}}" method="POST" data-person-id="{{person.id}}">
+                        <!-- 1 dropdown -->
+                        <div>
+                            <label for="sibling">Sibling:</label>
+                            <select id="sibling" name="sibling">
+                                {% for person in people %}
+                                    <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+                                {% endfor %}
+                            </select>
+                        </div> 
+                        <div class="btn-container">
+                            <!-- Add Button -->
+                            <div>
+                                <input type="submit" name="action" value="Connect">
+                            </div>
+    
+                            <!-- Remove Button -->
+                            <div>
+                                <input type="submit" name="action" value="Disconnect">
+                            </div>
+                        </div>
+                    </form>                
+                </div>
+
+                <!-- Connect or Disconnect child -->
+                <div class="form-container">
+                    <form id="childForm" action="/connect/child/{{person.id}}" method="POST" data-person-id="{{person.id}}">
+                        <!-- 1 dropdown -->
+                        <div>
+                            <label for="child">Child:</label>
+                            <select id="child" name="child">
+                                {% for person in people %}
+                                    <option value="{{ person.id }}">{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }} ({{person.id}})</option>
+                                {% endfor %}
+                            </select>
+                        </div> 
+                        <div class="btn-container">
+                            <!-- Add Button -->
+                            <div>
+                                <input type="submit" name="action" value="Connect">
+                            </div>
+    
+                            <!-- Remove Button -->
+                            <div>
+                                <input type="submit" name="action" value="Disconnect">
+                            </div>
+                        </div>
+                    </form>                
+                </div>
             </div>
         </div>   
     </div>

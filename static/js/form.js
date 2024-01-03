@@ -43,7 +43,7 @@ function form(action = "/", personId = 0, first_name = "", middle_name = "", las
     const submitBtn = document.createElement("input");
     submitBtn.type = "submit";
     submitBtn.classList.add("btn");
-    submitBtn.value = "Add";
+    submitBtn.value = "Connect";
 
     // Create cancel button
     const cancelBtn = document.createElement("a");
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addParentBtn.addEventListener("click", function () {
         const personId = document.getElementById("parentFormContainer").getAttribute("data-person-id") || "";
-        parentFormContainer.appendChild(form(action="/add_parent", personId));
+        parentFormContainer.appendChild(form(action=`/add/parent/`, personId));
         parentFormContainer.style.display = "block";
     });
 })
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // whenever "addSibling Button" is clicked
     addSiblingBtn.addEventListener("click", function () {
         const personId = document.getElementById("siblingFormContainer").getAttribute("data-person-id") || "";
-        siblingFormContainer.appendChild(form(action="/add_sibling", personId));
+        siblingFormContainer.appendChild(form(action=`/add/sibling`, personId));
         siblingFormContainer.style.display = "block";
     });
 })
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addChildBtn.addEventListener("click", function () {
         const personId = document.getElementById("childFormContainer").getAttribute("data-person-id") || "";
-        childFormContainer.appendChild(form(action="/add_child", personId));
+        childFormContainer.appendChild(form(action=`/add/child`, personId));
         childFormContainer.style.display = "block";
     });
 })

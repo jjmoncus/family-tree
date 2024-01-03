@@ -4,6 +4,7 @@
 
 from flask import Flask, render_template, url_for, request, redirect, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 # from sqlalchemy.orm import asdict
 from datetime import datetime
 # for string manipulation (analogous to `stringr`)
@@ -13,6 +14,7 @@ app = Flask(__name__)
 app.secret_key = b'here is a string'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 
@@ -31,7 +33,7 @@ db = SQLAlchemy(app)
 # ------------------------- Models -------------------------- #
 # ----------------------------------------------------------- #
 
-# Association Table
+# Association Tables for people
 person_parent_association = db.Table(
     'person_parent_association',
     db.Column('person_id', db.Integer, db.ForeignKey('person.id')),
@@ -43,6 +45,14 @@ sibling_association = db.Table(
     db.Column('left_id', db.Integer, db.ForeignKey('person.id')),
     db.Column('right_id', db.Integer, db.ForeignKey('person.id'))
 )
+
+# Association table for stories and people involved
+story_person_association = db.Table(
+    'story_person_association',
+    db.Column('story_id', db.Integer, db.ForeignKey('story.id')),
+    db.Column('person_id', db.Integer, db.ForeignKey('person.id'))
+)
+
 
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,9 +76,28 @@ class Person(db.Model):
                               secondaryjoin = id == sibling_association.c.right_id,
                               back_populates = 'siblings', 
                               lazy='select')
+    
+     # Define the many-to-many relationship between persons and stories they tell
+    stories_told = db.relationship('Story', backref='teller', lazy='select')
+
+    # Define the many-to-many relationship between persons and stories they are mentioned in
+    stories_mentioned_in = db.relationship('Story',
+                                           secondary=story_person_association,
+                                           backref='mentioned_people',
+                                           lazy='select')
 
     def __repr__(self):
         return '<Person %r>' % self.id
+    
+class Story(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=True)
+    content = db.Column(db.Text, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Foreign Key to link a story to the person who told it
+    teller_id = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
+
 
 
 
